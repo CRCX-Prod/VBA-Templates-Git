@@ -21,7 +21,3 @@ To use the ODBC Connection :
 ### Example :
 
 > ConnectDB "192.168.1.153", "00_colo_production", "colouser", "colouser"
-
-
-Test Mod in Branch
-
