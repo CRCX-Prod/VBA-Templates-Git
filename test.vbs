@@ -2,6 +2,8 @@ test
 
 sub test
     
-    msgbox "test"
+    dim testVariable
+    testVariable = "Hello"
+    msgbox testVariable
     
 end sub
