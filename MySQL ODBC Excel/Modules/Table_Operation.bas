@@ -20,25 +20,17 @@ Set rs = New ADODB.Recordset
 '    Range(Selection, Selection.End(xlDown)).Select
 '    Selection.Delete Shift:=xlUp
 
-
-
-tableName = Cells(1, 2)
+                tableName = Cells(1, 2)
 maxField = 1
 
-        While Cells(9, maxField) <> ""
-            
-            If maxField = 1 Then   'field 1
-            
+        While Cells(9, maxField) <> ""            
+            If maxField = 1 Then   'field 1      
                 SqlFields = Cells(9, maxField)
-            Else            'other fields
-                
+            Else            'other fields                
                 SqlFields = SqlFields & "," & Cells(9, maxField)
-            End If
-         
-        maxField = maxField + 1
-        
+            End If         
+        maxField = maxField + 1        
         Wend
-
 
     Sql = "SELECT " & SqlFields & " FROM " & tableName
 '    MsgBox Sql
