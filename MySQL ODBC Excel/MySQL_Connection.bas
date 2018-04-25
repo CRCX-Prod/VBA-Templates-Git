@@ -22,7 +22,6 @@ Sub ConnectDB(server_name As String, database_name As String, user_id As String,
   oConn.Open str
 End Sub
 
-
 '_________________________________________________________
 'AppendData
 'input Sheet number
@@ -48,7 +47,7 @@ Sub AppendData()
       Else            'other fields
           SqlFields = SqlFields & "," & Cells(2, i) & "= '" & Cells(3, i) & "'"
       End If
-  i = i + 1
+      i = i + 1
   Wend
 
   Sql = "INSERT INTO " & Cells(1, 2) & " SET " & SqlFields
