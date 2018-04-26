@@ -3,129 +3,168 @@ Option Explicit
 
 Sub ImportData(firstLine As Integer, firstColumn As Integer)
 
-Dim rs As ADODB.Recordset
-Dim Sql As String, SqlFields As String, tableName As String
-Dim maxField As Integer, line As Integer, column As Integer
-Dim stringRange As Range
+  Dim rs As ADODB.Recordset
+  Dim Sql As String, SqlFields As String, tableName As String
+  Dim maxField As Integer, line As Integer, column As Integer
+  Dim stringRange As Range
 
-Application.ScreenUpdating = False
-Set rs = New ADODB.Recordset
+  Application.ScreenUpdating = False
+  Set rs = New ADODB.Recordset
 
-'_____________________________________
+  '_____________________________________
 
-'Creation de la requete SQL
-'_____________________________________
+  'Creation de la requete SQL
+  '_____________________________________
 
-'    Rows(firstLine & ":" & firstLine).Select
-'    Range(Selection, Selection.End(xlDown)).Select
-'    Selection.Delete Shift:=xlUp
+  tableName = LookupTableName
+  maxField = 1
 
-                tableName = Cells(1, 2)
-maxField = 1
+  While Cells(9, maxField) <> ""
+      If maxField = 1 Then   'field 1
+          SqlFields = Cells(9, maxField)
+      Else            'other fields
+          SqlFields = SqlFields & "," & Cells(9, maxField)
+      End If
+  maxField = maxField + 1
+  Wend
 
-        While Cells(9, maxField) <> ""
-            If maxField = 1 Then   'field 1
-                SqlFields = Cells(9, maxField)
-            Else            'other fields
-                SqlFields = SqlFields & "," & Cells(9, maxField)
-            End If
-        maxField = maxField + 1
-        Wend
+  Sql = "SELECT " & SqlFields & " FROM " & tableName
+  '    MsgBox Sql
+  '    Range("A12").Value = Sql
 
-    Sql = "SELECT " & SqlFields & " FROM " & tableName
-'    MsgBox Sql
-'    Range("A12").Value = Sql
+      ConnectProductionServer
+      rs.Open Sql, oConn ', adOpenDynamic, adLockOptimistic
 
-    ConnectProductionServer
-    rs.Open Sql, oConn ', adOpenDynamic, adLockOptimistic
+  '_____________________________________
 
-'_____________________________________
-
-'Effacer les donnees existantes
-'_____________________________________
+  'Effacer les donnees existantes
+  '_____________________________________
 
 
 
 
 
-'_____________________________________
+  '_____________________________________
 
-'Affichage des donnees
-'_____________________________________
+  'Affichage des donnees
+  '_____________________________________
 
-line = 0
-    Do Until rs.EOF
+  line = 0
+      Do Until rs.EOF
 
-        For column = 0 To maxField - 2
-            Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
+          For column = 0 To maxField - 2
+              Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
 
-        Next
-        line = line + 1
-        rs.MoveNext
-    Loop
+          Next
+          line = line + 1
+          rs.MoveNext
+      Loop
 
-Application.ScreenUpdating = True
+  Application.ScreenUpdating = True
 
-oConn.Close
-Set oConn = Nothing
-Set rs = Nothing
+  oConn.Close
+  Set oConn = Nothing
+  Set rs = Nothing
 
 End Sub
 
+sub testcode ()
+
+  msgbox LookupTableName
+
+end sub
+
+Function LookupTableName() As String
+  'look in A column : "Table Name",
+  'Revert Column B
+  LookupTableName = Cells(FindLine ("Table Name"), 2)
+End Function
+
+function FindLine (lookupValue as String) as String
+    Dim lookupLine As Integer, cellValue As String
+
+    lookupLine = 1
+    cellValue = Cells(lookupLine, 1).Value
+
+    While cellValue <> lookupValue
+      lookupLine = lookupLine + 1
+      cellValue = Cells(lookupLine, 1).Value
+    Wend
+
+    FindLine = lookupLine
+end function
+
+Function LookupImportFields() As String
+
+  'look in A column : "Table Name",
+  'Revert Column B
+  Dim lookupLine As Integer, cellValue As String
+
+  lookupLine = 1
+  cellValue = Cells(lookupLine, 1).Value
+
+  While cellValue <> "Table Name"
+    lookupLine = lookupLine + 1
+    cellValue = Cells(lookupLine, 1).Value
+  Wend
+
+  SqlTableName = Cells(lookupLine, 2)
+
+End Function
 
 
 Sub UpdateData(firstLine As Integer, firstColumn As Integer)
 
-Dim Sql As String, SqlFields As String, tableName As String, countSql As Integer
-Dim maxField As Integer
-Dim tableLine As Integer
+  Dim Sql As String, SqlFields As String, tableName As String, countSql As Integer
+  Dim maxField As Integer
+  Dim tableLine As Integer
 
-'_____________________________________
+  '_____________________________________
 
-'Creation de la requete SQL UPDATE
-'_____________________________________
+  'Creation de la requete SQL UPDATE
+  '_____________________________________
 
 
-ConnectProductionServer
+  ConnectProductionServer
 
-    tableName = Cells(1, 2)
-    maxField = 1
-    tableLine = firstLine
+      tableName = Cells(1, 2)
+      maxField = 1
+      tableLine = firstLine
 
-    While Cells(tableLine, firstColumn) <> ""
+      While Cells(tableLine, firstColumn) <> ""
 
-        Cells(5, 1) = Cells(tableLine, firstColumn)
+          Cells(5, 1) = Cells(tableLine, firstColumn)
 
-        maxField = 2
-        countSql = 1
-        SqlFields = ""
-        While Cells(3, maxField) <> ""
+          maxField = 2
+          countSql = 1
+          SqlFields = ""
+          While Cells(3, maxField) <> ""
 
-                    If countSql > 1 Then
+                      If countSql > 1 Then
 
-                        SqlFields = SqlFields & " , "
-                    End If
+                          SqlFields = SqlFields & " , "
+                      End If
 
-                    If Cells(5, maxField) <> "" Then
+                      If Cells(5, maxField) <> "" Then
 
-                        SqlFields = SqlFields & Cells(3, maxField) & " = '" & Cells(5, maxField) & "'"
-                        Else
-                        SqlFields = SqlFields & Cells(3, maxField) & " = NULL"
-                    End If
+                          SqlFields = SqlFields & Cells(3, maxField) & " = '" & Cells(5, maxField) & "'"
+                          Else
+                          SqlFields = SqlFields & Cells(3, maxField) & " = NULL"
+                      End If
 
-            maxField = maxField + 1
-            countSql = countSql + 1
-        Wend
-        'Timestamp ????
+              maxField = maxField + 1
+              countSql = countSql + 1
+          Wend
+          'Timestamp ????
 
-        Sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
-        'MsgBox Sql
-        oConn.Execute Sql
-        tableLine = tableLine + 1
+          Sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
+          'MsgBox Sql
+          oConn.Execute Sql
+          tableLine = tableLine + 1
 
-    Wend
-'MsgBox Sql
-    oConn.Close
-    Set oConn = Nothing
+      Wend
+  'MsgBox Sql
+      oConn.Close
+      Set oConn = Nothing
 
 End Sub
