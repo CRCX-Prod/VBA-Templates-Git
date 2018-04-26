@@ -16,7 +16,7 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
   'Creation de la requete SQL
   '_____________________________________
 
-  tableName = LookupTableName
+  tableName = Cells(FindLine("Table Name", 1), 2)
   maxField = 1
 
   While Cells(9, maxField) <> ""
@@ -68,31 +68,46 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
 
 End Sub
 
-sub testcode ()
-
-  msgbox LookupTableName
-
-end sub
-
-Function LookupTableName() As String
-  'look in A column : "Table Name",
-  'Revert Column B
-  LookupTableName = Cells(FindLine ("Table Name"), 2)
-End Function
-
-function FindLine (lookupValue as String) as String
+Function FindLine(lookupValue As String, column As Integer) As String
     Dim lookupLine As Integer, cellValue As String
 
     lookupLine = 1
-    cellValue = Cells(lookupLine, 1).Value
+    cellValue = Cells(lookupLine, column).Value
 
     While cellValue <> lookupValue
-      lookupLine = lookupLine + 1
-      cellValue = Cells(lookupLine, 1).Value
+      lookupLine = lookupLine + column
+      cellValue = Cells(lookupLine, column).Value
     Wend
 
     FindLine = lookupLine
-end function
+End Function
+
+Sub testcode()
+ Dim testArray() As String
+  testArray = ArrayLine(3)
+ MsgBox testArray(4)
+ 
+End Sub
+
+Function ArrayLine(line As Integer) As String()
+  Dim iColumn As Integer, sArray() As String
+
+  'Dimentionate the array
+  iColumn = 1
+  While Cells(line, iColumn) <> ""
+    ReDim sArray(iColumn)
+    iColumn = iColumn + 1
+  Wend
+  
+  'Populate the array
+  iColumn = 1
+  While Cells(line, iColumn) <> ""
+    sArray(iColumn) = Cells(line, iColumn)
+    iColumn = iColumn + 1
+  Wend
+  
+  ArrayLine = sArray
+End Function
 
 Function LookupImportFields() As String
 
