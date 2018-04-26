@@ -2,39 +2,39 @@ Attribute VB_Name = "Table_Operation"
 Option Explicit
 
 Sub ImportData(firstLine As Integer, firstColumn As Integer)
-  
+
   Dim Sql As String, sqlFields As String, tableName As String
   Dim line As Integer, column As Integer
-  
+
   Application.ScreenUpdating = False
-  
+
   'Get Table Name
   tableName = Cells(FindLine("Table Name", 1), 2)
-  
+
   'Get Import fields
   sqlFields = SqlImportFields(ArrayLine(FindLine("Import Data", 1) + 1))
 
   Sql = SqlSelectQuery(tableName, sqlFields)
-  
+
   RunImportSql Sql, firstLine, firstColumn
-  
+
   Application.ScreenUpdating = True
 End Sub
 
 Sub RunImportSql(sqlQuery As String, firstLine As Integer, firstColumn As Integer)
-  
+
   Dim rs As ADODB.Recordset
   Dim line As Integer, column As Integer
-  
+
   Set rs = New ADODB.Recordset
-  
+
   ConnectProductionServer
   rs.Open sqlQuery, oConn
 
     line = 0
       Do Until rs.EOF
 
-          For column = 0 To rs.Fields.Count - 2
+          For column = 0 To rs.Fields.Count -1
               Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
 
           Next
@@ -45,84 +45,14 @@ Sub RunImportSql(sqlQuery As String, firstLine As Integer, firstColumn As Intege
   oConn.Close
   Set oConn = Nothing
   Set rs = Nothing
-  
-End Sub
 
+End Sub
 
 Function SqlSelectQuery(tableName As String, sqlFields As String) As String 'add filter
 
   SqlSelectQuery = "SELECT " & sqlFields & " FROM " & tableName
 
 End Function
-
-Sub ImportDataOldVersion(firstLine As Integer, firstColumn As Integer)
-
-  Dim rs As ADODB.Recordset
-  Dim Sql As String, sqlFields As String, tableName As String
-  Dim maxField As Integer, line As Integer, column As Integer
-  Dim stringRange As Range
-
-  Application.ScreenUpdating = False
-  Set rs = New ADODB.Recordset
-
-  '_____________________________________
-
-  'Creation de la requete SQL
-  '_____________________________________
-
-  tableName = Cells(FindLine("Table Name", 1), 2)
-
-
-
-
-  While Cells(9, maxField) <> ""
-      If maxField = 1 Then   'field 1
-          sqlFields = Cells(9, maxField)
-      Else            'other fields
-          sqlFields = sqlFields & "," & Cells(9, maxField)
-      End If
-  maxField = maxField + 1
-  Wend
-
-  Sql = "SELECT " & sqlFields & " FROM " & tableName
-  '    MsgBox Sql
-  '    Range("A12").Value = Sql
-
-      ConnectProductionServer
-      rs.Open Sql, oConn ', adOpenDynamic, adLockOptimistic
-
-  '_____________________________________
-
-  'Effacer les donnees existantes
-  '_____________________________________
-
-
-
-
-
-  '_____________________________________
-
-  'Affichage des donnees
-  '_____________________________________
-
-  line = 0
-      Do Until rs.EOF
-
-          For column = 0 To maxField - 2
-              Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
-
-          Next
-          line = line + 1
-          rs.MoveNext
-      Loop
-
-  Application.ScreenUpdating = True
-
-  oConn.Close
-  Set oConn = Nothing
-  Set rs = Nothing
-
-End Sub
 
 Function FindLine(lookupValue As String, column As Integer) As Integer
     Dim lookupLine As Integer, cellValue As String
