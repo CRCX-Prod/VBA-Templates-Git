@@ -95,6 +95,17 @@ Function ArrayLine(line As Integer) As String()
   ArrayLine = sArray
 End Function
 
+function SizeArray (vArray () as variant) as Integer
+  dim arrayItem as variant, iArray as Integer
+
+  iArray =0
+  for each arrayItem in vArray
+    iArray = iarray + 1
+  Next arrayItem
+
+  SizeArray = iArray
+end function
+
 Function SqlImportFields(sArray() As String) As String
   '''Reformat an array into fields statements for SQL queries
   Dim sqlField As Variant, sFields As String
@@ -109,6 +120,25 @@ Function SqlImportFields(sArray() As String) As String
 
   SqlImportFields = sFields
 End Function
+
+function sqlImportFilters(sArrayField as string, sArrayValue as string) as String
+  '''Reformat two arrays into filters statements for SQL queries (WHERE)
+  Dim sqlField As Variant, sFields As String, sValue as string
+  Dim dimArray as Integer
+
+  sFields = ""
+
+  dimArray = 0
+  For Each sqlField In sArrayField
+    sFields = sFields & sqlField & ","
+  Next sqlField
+
+sFields = Mid(sFields, 2)
+sFields = Left(sFields, Len(sFields) - 1)
+
+SqlImportFields = sFields
+
+end function
 
 Sub UpdateData(firstLine As Integer, firstColumn As Integer)
 
