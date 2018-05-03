@@ -34,7 +34,7 @@ Sub RunImportSql(sqlQuery As String, firstLine As Integer, firstColumn As Intege
     line = 0
       Do Until rs.EOF
 
-          For column = 0 To rs.Fields.Count -1
+          For column = 0 To rs.Fields.Count - 1
               Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
 
           Next
@@ -68,14 +68,15 @@ Function FindLine(lookupValue As String, column As Integer) As Integer
     FindLine = lookupLine
 End Function
 
-Sub testcode()
- Dim testArray() As String
-  testArray = ArrayLine(3)
-  msgbox SqlImportFields(testArray)
-
-End Sub
+'''''''Sub testcode()
+''''''' Dim testArray() As String
+'''''''  testArray = ArrayLine(3)
+'''''''  MsgBox SqlImportFields(testArray)
+'''''''
+'''''''End Sub
 
 Function ArrayLine(line As Integer) As String()
+  'Create an array from a line in a worksheet'
   Dim iColumn As Integer, sArray() As String
 
   'Dimentionate the array
@@ -95,16 +96,16 @@ Function ArrayLine(line As Integer) As String()
   ArrayLine = sArray
 End Function
 
-function SizeArray (vArray () as variant) as Integer
-  dim arrayItem as variant, iArray as Integer
+Function SizeArray(vArray() As String) As Integer
+  Dim arrayItem As Variant, iArray As Integer
 
-  iArray =0
-  for each arrayItem in vArray
-    iArray = iarray + 1
+  iArray = 0
+  For Each arrayItem In vArray
+    iArray = iArray + 1
   Next arrayItem
 
   SizeArray = iArray
-end function
+End Function
 
 Function SqlImportFields(sArray() As String) As String
   '''Reformat an array into fields statements for SQL queries
@@ -121,24 +122,33 @@ Function SqlImportFields(sArray() As String) As String
   SqlImportFields = sFields
 End Function
 
-function sqlImportFilters(sArrayField as string, sArrayValue as string) as String
-  '''Reformat two arrays into filters statements for SQL queries (WHERE)
-  Dim sqlField As Variant, sFields As String, sValue as string
-  Dim dimArray as Integer
+Sub runtest()
 
-  sFields = ""
+    Dim sArrayFields() As String, sArrayValues() As String
+    Dim sSqlFilters
 
-  dimArray = 0
-  For Each sqlField In sArrayField
-    sFields = sFields & sqlField & ","
-  Next sqlField
+    sArrayFields = ArrayLine(FindLine("Filters", 1) + 1)
+    sArrayValues = ArrayLine(FindLine("Filters", 1) + 2)
+    
+    sSqlFilters = SizeArray(sArrayFields)
+    sSqlFilters = SqlImportFilters(sArrayFields, sArrayValues)
+    
+    MsgBox sSqlFilters
+End Sub
 
-sFields = Mid(sFields, 2)
-sFields = Left(sFields, Len(sFields) - 1)
 
-SqlImportFields = sFields
+Function SqlImportFilters(sArrayFields() As String, sArrayValues() As String) As String
+  'Reformat two arrays into filters statements for SQL queries (WHERE)
+  Dim sFilters As String, iArray As Integer
 
-end function
+  For iArray = 1 To SizeArray(sArrayFields) - 1
+    sFilters = sFilters & sArrayFields(iArray) & " ='" & sArrayValues(iArray) & "',"
+  Next iArray
+  
+  sFilters = Left(sFilters, Len(sFilters) - 1)
+  SqlImportFilters = sFilters
+
+End Function
 
 Sub UpdateData(firstLine As Integer, firstColumn As Integer)
 
