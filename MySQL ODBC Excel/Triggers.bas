@@ -2,14 +2,15 @@ Attribute VB_Name = "Triggers"
 Option Explicit
 
 'Triggers are the codes directly runned by Buttons'
+
 Sub UpdatePrevalidation()
   'UpdateData and Table location'
-  UpdateData 15, 1
+  UpdateData 16, 1
 End Sub
 
 Sub RevertPrevalidation()
   'ImportData and Table location'
-  ImportData 15, 1
+  ImportData 16, 1
 End Sub
 
 Sub usertest()
