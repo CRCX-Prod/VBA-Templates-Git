@@ -13,15 +13,22 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
 
   'Get Import fields
   sSqlFields = SqlImportFields(ArrayLine(FindLine("Import Data", 1) + 1))
-  
+
   'Get Filters statement
   sSqlFilters = SqlImportFilters(ArrayLine(FindLine("Filters", 1) + 1), ArrayLine(FindLine("Filters", 1) + 2))
 
+  'Sql statement'
   Sql = SqlSelectQuery(sTableName, sSqlFields, sSqlFilters)
 
   RunImportSql Sql, firstLine, firstColumn
 
   Application.ScreenUpdating = True
+End Sub
+
+Sub EmptyTable (firstLine As Integer, firstColumn As Integer)
+  'Empty Excel table before doing new SELECT query'
+
+
 End Sub
 
 Sub RunImportSql(sqlQuery As String, firstLine As Integer, firstColumn As Integer)
@@ -58,7 +65,7 @@ Function SqlSelectQuery(sTableName As String, sSqlFields As String, sSqlFilters)
  Else
     SqlSelectQuery = "SELECT " & sSqlFields & " FROM " & sTableName
  End If
- 
+
 End Function
 
 Function FindLine(lookupValue As String, column As Integer) As Integer
@@ -127,11 +134,11 @@ Function SqlImportFilters(sArrayFields() As String, sArrayValues() As String) As
   'Reformat two arrays into filters statements for SQL queries (WHERE)
   Dim sFilters As String, iArray As Integer, maxArray
   maxArray = SizeArray(sArrayFields)
-  
+
   For iArray = 1 To SizeArray(sArrayFields) - 1
     sFilters = sFilters & sArrayFields(iArray) & " ='" & sArrayValues(iArray) & "',"
   Next iArray
-  
+
   sFilters = Left(sFilters, Len(sFilters) - 1)
   SqlImportFilters = sFilters
 
