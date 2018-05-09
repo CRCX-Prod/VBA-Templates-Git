@@ -1,4 +1,4 @@
-Attribute VB_Name = "Admin"
+Attribute VB_Name = "Table_Admin"
 Option Explicit
 
 Sub HideAllSheets()
@@ -15,20 +15,28 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
 
     Dim rs As ADODB.Recordset
     Dim sSql As String, adminTable As String
-  
+
     Set rs = New ADODB.Recordset
 
     adminTable = "06preva_admin"
     sSql = SqlSelectQuery(adminTable, "*", "")
-    
+
     MsgBox sSql
-    
+
     ConnectProductionServer
     rs.Open sSql, oConn
-    
+
     Do Until rs.EOF
-
-
+      If inputLogin = rs.Fields("Login") Then
+        If inputPassword = rs.Fields("Password") Then
+          MsgBox "Good Password"
+        Else
+          MsgBox "Wrong Password"
+        End If ' true
+      Else
+        Exit Sub
+      End If
+      rs.MoveNext
     Loop
 
   oConn.Close
@@ -37,34 +45,14 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
 
 End Sub
 
-Sub TestLogin(inputLogin As String, data)
+Sub subTest()
 
+
+RunTestPassword "Charles", "Charles01"
 End Sub
 
-Sub Test()
-    
-  Dim rs As ADODB.Recordset
-  Dim line As Integer, column As Integer
+Sub TestLogin(inputLogin As String, data)
 
-  Set rs = New ADODB.Recordset
+    RunTestPassword "Charles", "P@ssw0rd"
 
-  ConnectProductionServer
-  rs.Open sqlQuery, oConn
-
-    line = 0
-      Do Until rs.EOF
-
-          For column = 0 To rs.Fields.Count - 1
-              Cells(line + firstLine, column + firstColumn) = rs.Fields(column).Value
-
-          Next
-          line = line + 1
-          rs.MoveNext
-      Loop
-
-  oConn.Close
-  Set oConn = Nothing
-  Set rs = Nothing
-
-    
 End Sub
