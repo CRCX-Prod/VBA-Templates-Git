@@ -13,37 +13,33 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Sub cmbLogin_Change()
-
-End Sub
-
-Private Sub Label1_Click()
-
-End Sub
-
-Private Sub lblLogin_Click()
-
-End Sub
-
-Private Sub UserForm_Click()
-
+Private Sub cmdOK_Click()
+    
+    RunTestPassword cmbLogin.Value, txtPassword.Value
+    
 End Sub
 
 Private Sub UserForm_Initialize()
     
-    Dim sArray() As String
-    
-    ReDim sArray(2)
-    sArray(1) = "Charles"
-    
-    cmbLogin.AddItem sArray(1)
-    
-    
-    
+    cmbLoginAdditem
+       
 End Sub
 
 
-Sub runTest()
+Private Sub cmbLoginAdditem()
+    Dim rs As ADODB.Recordset
+    Set rs = New ADODB.Recordset
 
-    Sql
+    ConnectProductionServer
+    rs.Open "SELECT Login FROM 06preva_admin ORDER BY Login", oConn
+    
+    Do Until rs.EOF
+      cmbLogin.AddItem rs.Fields("Login")
+      rs.MoveNext
+    Loop
+
+  oConn.Close
+  Set oConn = Nothing
+  Set rs = Nothing
 End Sub
+

@@ -3,9 +3,19 @@ Option Explicit
 
 Sub HideAllSheets()
   'VeryHide all sheets'
-
+  Dim ws As Worksheet
+    For Each ws In ActiveWorkbook.Worksheets
+        ws.Visible = xlSheetVeryHidden
+    Next
 End Sub
 
+Sub ShowAllSheets()
+  'VeryHide all sheets'
+  Dim ws As Worksheet
+    For Each ws In ActiveWorkbook.Worksheets
+        ws.Visible = xlSheetVisible
+    Next
+End Sub
 Sub ShowSheet(sheetName As String)
     'show sheet according to the sheet name'
 
@@ -21,8 +31,6 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
     adminTable = "06preva_admin"
     sSql = SqlSelectQuery(adminTable, "*", "")
 
-    MsgBox sSql
-
     ConnectProductionServer
     rs.Open sSql, oConn
 
@@ -30,6 +38,7 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
       If inputLogin = rs.Fields("Login") Then
         If inputPassword = rs.Fields("Password") Then
           MsgBox "Good Password"
+          LoginForm.Hide
         Else
           MsgBox "Wrong Password"
         End If ' true
