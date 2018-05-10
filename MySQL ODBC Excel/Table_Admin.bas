@@ -2,10 +2,12 @@ Attribute VB_Name = "Table_Admin"
 Option Explicit
 
 Sub HideAllSheets()
-  'VeryHide all sheets'
+  'VeryHide all sheets appart Main'
   Dim ws As Worksheet
     For Each ws In ActiveWorkbook.Worksheets
-        ws.Visible = xlSheetVeryHidden
+        If ws.Name <> "Main" Then
+            ws.Visible = xlSheetVeryHidden
+        End If
     Next
 End Sub
 
@@ -16,12 +18,23 @@ Sub ShowAllSheets()
         ws.Visible = xlSheetVisible
     Next
 End Sub
-Sub ShowSheet(sheetName As String)
-    'show sheet according to the sheet name'
+
+
+Sub ShowSheet(sheetName As String, adminValue As Variant)
+    'show sheet according to the sheet name, if adminValue = "x"
+    Dim ws As Worksheet
+
+    If adminValue = "x" Then
+        For Each ws In ActiveWorkbook.Worksheets
+            If ws.Name = sheetName Then
+                ws.Visible = xlSheetVisible
+            End If
+        Next
+    End If
 
 End Sub
 
-Sub RunTestPassword(inputLogin As String, inputPassword As String)
+Sub TestPassword(inputLogin As String, inputPassword As String)
 
     Dim rs As ADODB.Recordset
     Dim sSql As String, adminTable As String
@@ -37,13 +50,14 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
     Do Until rs.EOF
       If inputLogin = rs.Fields("Login") Then
         If inputPassword = rs.Fields("Password") Then
-          MsgBox "Good Password"
+          'MsgBox "Good Password"
+          AdminSheets rs
           LoginForm.Hide
         Else
           MsgBox "Wrong Password"
-        End If ' true
+        End If
       Else
-        Exit Sub
+
       End If
       rs.MoveNext
     Loop
@@ -54,14 +68,16 @@ Sub RunTestPassword(inputLogin As String, inputPassword As String)
 
 End Sub
 
-Sub subTest()
+Sub AdminSheets(rs As Recordset)
+    Dim iFields As Integer
 
+    For iFields = 1 To rs.Fields.Count - 1
+        ShowSheet rs.Fields(iFields).Name, rs.Fields(iFields).Value
+        'MsgBox rs.Fields(iFields).Name
+    Next iFields
 
-RunTestPassword "Charles", "Charles01"
-End Sub
-
-Sub TestLogin(inputLogin As String, data)
-
-    RunTestPassword "Charles", "P@ssw0rd"
+''    MsgBox rs.Fields(iFields).Name
+''''MsgBox rs.Fields(1).Name
+''''MsgBox rs.Fields(1).Value
 
 End Sub

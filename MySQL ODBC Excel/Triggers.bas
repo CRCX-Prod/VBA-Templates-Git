@@ -65,3 +65,9 @@ Sub SaveColoRequest()
     End If
 
 End Sub
+
+Sub OpenLogin()
+
+    LoginForm.Show
+
+End Sub

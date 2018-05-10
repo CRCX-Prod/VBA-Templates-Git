@@ -25,7 +25,7 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
   Application.ScreenUpdating = True
 End Sub
 
-Sub EmptyTable (firstLine As Integer, firstColumn As Integer)
+Sub EmptyTable(firstLine As Integer, firstColumn As Integer)
   'Empty Excel table before doing new SELECT query'
 
 
