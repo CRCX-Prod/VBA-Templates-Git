@@ -1,6 +1,8 @@
 Attribute VB_Name = "Table_Admin"
 Option Explicit
 
+Public isAdmin As Boolean
+
 Sub HideAllSheets()
   'VeryHide all sheets appart Main'
   Dim ws As Worksheet
@@ -23,7 +25,7 @@ End Sub
 Sub ShowSheet(sheetName As String, adminValue As Variant)
     'show sheet according to the sheet name, if adminValue = "x"
     Dim ws As Worksheet
-
+    
     If adminValue = "x" Then
         For Each ws In ActiveWorkbook.Worksheets
             If ws.Name = sheetName Then
@@ -46,38 +48,45 @@ Sub TestPassword(inputLogin As String, inputPassword As String)
 
     ConnectProductionServer
     rs.Open sSql, oConn
-
+       
     Do Until rs.EOF
       If inputLogin = rs.Fields("Login") Then
         If inputPassword = rs.Fields("Password") Then
           'MsgBox "Good Password"
           AdminSheets rs
+          SetAdminSession rs
           LoginForm.Hide
         Else
           MsgBox "Wrong Password"
         End If
       Else
-
+        
       End If
       rs.MoveNext
     Loop
-
+    
   oConn.Close
   Set oConn = Nothing
   Set rs = Nothing
 
 End Sub
 
+Sub SetAdminSession(rs As Recordset)
+    
+    If rs.Fields("Admin").Value = "x" Then
+        isAdmin = True
+    End If
+    
+End Sub
+
+
 Sub AdminSheets(rs As Recordset)
     Dim iFields As Integer
-
+    
     For iFields = 1 To rs.Fields.Count - 1
+        
         ShowSheet rs.Fields(iFields).Name, rs.Fields(iFields).Value
-        'MsgBox rs.Fields(iFields).Name
+        
     Next iFields
-
-''    MsgBox rs.Fields(iFields).Name
-''''MsgBox rs.Fields(1).Name
-''''MsgBox rs.Fields(1).Value
-
+    
 End Sub

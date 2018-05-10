@@ -17,6 +17,12 @@ Sub usertest()
   MsgBox Environ("username")
 End Sub
 
+Sub OpenLogin()
+
+    LoginForm.Show
+
+End Sub
+
 'Form Request; need to be generalized'
 
 Sub SaveColoRequest()
@@ -63,11 +69,5 @@ Sub SaveColoRequest()
         Range("F20").Value = Range("N22").Value
         Application.ScreenUpdating = True
     End If
-
-End Sub
-
-Sub OpenLogin()
-
-    LoginForm.Show
 
 End Sub
