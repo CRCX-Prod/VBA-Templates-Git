@@ -126,7 +126,7 @@ Function SqlImportFields(sArray() As String) As String
 
   sFields = Mid(sFields, 2)
   sFields = Left(sFields, Len(sFields) - 1)
-
+  
   SqlImportFields = sFields
 End Function
 
@@ -199,3 +199,9 @@ Sub UpdateData(firstLine As Integer, firstColumn As Integer)
       Set oConn = Nothing
 
 End Sub
+
+Function GetHistoryLog()
+
+    GetHistoryLog = Cells(FindLine("Table Name", 1), 2)
+        
+End Function

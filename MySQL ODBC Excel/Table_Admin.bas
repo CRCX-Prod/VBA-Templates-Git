@@ -3,6 +3,11 @@ Option Explicit
 
 Public isAdmin As Boolean
 
+Sub SetAdmin()
+    isAdmin = True
+    ShowAllSheets
+End Sub
+
 Sub HideAllSheets()
   'VeryHide all sheets appart Main'
   Dim ws As Worksheet
@@ -42,13 +47,15 @@ Sub TestPassword(inputLogin As String, inputPassword As String)
     Dim sSql As String, adminTable As String
 
     Set rs = New ADODB.Recordset
-
+    
     adminTable = "06preva_admin"
     sSql = SqlSelectQuery(adminTable, "*", "")
-
     ConnectProductionServer
     rs.Open sSql, oConn
        
+    HideAllSheets
+    isAdmin = False
+    
     Do Until rs.EOF
       If inputLogin = rs.Fields("Login") Then
         If inputPassword = rs.Fields("Password") Then
@@ -74,7 +81,7 @@ End Sub
 Sub SetAdminSession(rs As Recordset)
     
     If rs.Fields("Admin").Value = "x" Then
-        isAdmin = True
+        SetAdmin
     End If
     
 End Sub
@@ -82,6 +89,7 @@ End Sub
 
 Sub AdminSheets(rs As Recordset)
     Dim iFields As Integer
+    Application.ScreenUpdating = False
     
     For iFields = 1 To rs.Fields.Count - 1
         
@@ -89,4 +97,7 @@ Sub AdminSheets(rs As Recordset)
         
     Next iFields
     
+    Application.ScreenUpdating = True
 End Sub
+
+
