@@ -2,6 +2,7 @@ Attribute VB_Name = "Table_Admin"
 Option Explicit
 
 Public isAdmin As Boolean
+Public sLogin As String, sOperator As String, sRegion As String
 
 Sub SetAdmin()
     isAdmin = True
@@ -62,7 +63,10 @@ Sub TestPassword(inputLogin As String, inputPassword As String)
           'MsgBox "Good Password"
           AdminSheets rs
           SetAdminSession rs
+          SetAdminFilters rs
           LoginForm.Hide
+          sLogin = inputLogin
+          Application.CalculateFull
         Else
           MsgBox "Wrong Password"
         End If
@@ -100,4 +104,26 @@ Sub AdminSheets(rs As Recordset)
     Application.ScreenUpdating = True
 End Sub
 
+Sub SetAdminFilters(rs As Recordset)
 
+    sOperator = rs.Fields("Operator").Value
+    sRegion = rs.Fields("Region").Value
+
+End Sub
+
+'Functions to get Admin config in Excel fields
+Function GetLogin() As String
+    Application.Volatile True
+    GetLogin = sLogin
+End Function
+
+'Region Filter
+Function GetRegion() As String
+    GetRegion = sRegion
+End Function
+
+'Operator Filter
+Function GetOperator() As String
+    Application.Volatile True
+    GetOperator = sOperator
+End Function

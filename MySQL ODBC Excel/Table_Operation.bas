@@ -136,12 +136,11 @@ Function SqlImportFilters(sArrayFields() As String, sArrayValues() As String) As
   maxArray = SizeArray(sArrayFields)
 
   For iArray = 1 To SizeArray(sArrayFields) - 1
-    sFilters = sFilters & sArrayFields(iArray) & " ='" & sArrayValues(iArray) & "',"
+    sFilters = sFilters & sArrayFields(iArray) & " ='" & sArrayValues(iArray) & "' AND "
   Next iArray
-
-  sFilters = Left(sFilters, Len(sFilters) - 1)
+    
+  sFilters = Left(sFilters, Len(sFilters) - 5)
   SqlImportFilters = sFilters
-
 End Function
 
 Sub UpdateData(firstLine As Integer, firstColumn As Integer)
