@@ -17,7 +17,7 @@ Sub TestUpdate()
         'Get Import fields
         sSqlFields = SqlImportFields(ArrayLine(FindLine("Import Data", 1) + 1))
         'Sql statement'
-        sSql = SqlSelectQuery(sTableName, sSqlFields, "")
+        sSql = SqlSelectQuery(sTableName, sSqlFields & ", LogHistory", "")
         rs.Open sSql, oConn
     '____________________________
     
@@ -31,7 +31,6 @@ Sub TestUpdate()
         
     
 End Sub
-
 
 
 Sub RunExcelID(rs As Recordset, firstLine As Integer, firstColumn As Integer)
@@ -85,7 +84,7 @@ Sub CompareRs(rs As Recordset, arrayField() As String, arrayUpdate() As String)
     
     For iArray = 2 To maxArray - 1
         If arrayUpdate(iArray) <> rs.Fields(arrayField(iArray)).Value Then
-            RunUpdateSQL arrayField(), arrayUpdate()
+            RunUpdateSQL rs, arrayField(), arrayUpdate()
             Exit Sub
         End If
 
@@ -97,40 +96,41 @@ End Sub
 '          'MsgBox Sql
 '          oConn.Execute Sql
 
-Sub RunUpdateSQL(arrayField() As String, arrayUpdate() As String)
+Sub RunUpdateSQL(rs As Recordset, arrayField() As String, arrayUpdate() As String)
     Dim sSql As String, sTableName As String, sSqlFields As String
     
     Dim testLog As String
     
     sTableName = Cells(FindLine("Table Name", 1), 2)
-    sSqlFields = SqlSet(arrayField(), arrayUpdate(), True)
+    sSqlFields = SqlSet(rs, arrayField(), arrayUpdate(), True)
 
     sSql = "UPDATE " & sTableName & _
             " SET " & sSqlFields & _
             " WHERE " & arrayField(1) & " = " & arrayUpdate(1)
     MsgBox sSql
-
+    oConn.Execute sSql
     
 End Sub
  
- Function SqlSet(arrayField() As String, arrayUpdate() As String, isLogHistory As Boolean) As String
+ Function SqlSet(rs As Recordset, arrayField() As String, arrayUpdate() As String, isLogHistory As Boolean) As String
     
     Dim maxArray As Integer, iArray As Integer
     Dim sSqlSet As String, sLog As String
        
     sSqlSet = ""
-    'sLog = rs.value
-    sLog = sLogin & ", "
+    sLog = rs.Fields("LogHistory").Value
+    sLog = sLog & " " & sLogin & ", "
     maxArray = SizeArray(arrayUpdate())
     
     For iArray = 2 To maxArray - 1
-        sSqlSet = sSqlSet & "'" & arrayField(iArray) & "' = '" & arrayUpdate(iArray) & "',"
+
+        sSqlSet = sSqlSet & arrayField(iArray) & " = '" & arrayUpdate(iArray) & "', "
         sLog = sLog & arrayField(iArray) & " = " & arrayUpdate(iArray) & ", "
     Next iArray
     
     sLog = sLog & Now() & ";"
     MsgBox sLog
-    sSqlSet = sSqlSet & ", 'LogHistory' = '" & sLog & "'"
+    sSqlSet = sSqlSet & " LogHistory = """ & sLog & """"
     SqlSet = sSqlSet
     
  End Function
