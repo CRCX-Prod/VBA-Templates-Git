@@ -3,7 +3,7 @@ Option Explicit
 
 Sub ImportData(firstLine As Integer, firstColumn As Integer)
 
-  Dim Sql As String, sTableName As String, sSqlFields As String, sSqlFilters As String
+  Dim sql As String, sTableName As String, sSqlFields As String, sSqlFilters As String
   Dim line As Integer, column As Integer
 
   Application.ScreenUpdating = False
@@ -18,9 +18,9 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
   sSqlFilters = SqlImportFilters(ArrayLine(FindLine("Filters", 1) + 1), ArrayLine(FindLine("Filters", 1) + 2))
 
   'Sql statement'
-  Sql = SqlSelectQuery(sTableName, sSqlFields, sSqlFilters)
+  sql = SqlSelectQuery(sTableName, sSqlFields, sSqlFilters)
 
-  RunImportSql Sql, firstLine, firstColumn
+  RunImportSql sql, firstLine, firstColumn
 
   Application.ScreenUpdating = True
 End Sub
@@ -104,6 +104,22 @@ Function ArrayLine(line As Integer) As String()
   ArrayLine = sArray
 End Function
 
+Function ArrayLineDim(line As Integer, iDim As Integer) As String()
+  'Create an array from a line in a worksheet'
+  Dim iColumn As Integer, sArray() As String
+
+  'Dimentionate the array
+  ReDim sArray(iDim + 1)
+
+  'Populate the array
+    For iColumn = 1 To iDim
+      sArray(iColumn) = Cells(line, iColumn)
+    Next
+    
+  ArrayLineDim = sArray
+End Function
+
+
 Function SizeArray(vArray() As String) As Integer
   Dim arrayItem As Variant, iArray As Integer
 
@@ -145,7 +161,7 @@ End Function
 
 Sub UpdateData(firstLine As Integer, firstColumn As Integer)
 
-  Dim Sql As String, SqlFields As String, tableName As String, countSql As Integer
+  Dim sql As String, SqlFields As String, tableName As String, countSql As Integer
   Dim maxField As Integer
   Dim tableLine As Integer
 
@@ -187,9 +203,9 @@ Sub UpdateData(firstLine As Integer, firstColumn As Integer)
           Wend
           'Timestamp ????
 
-          Sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
-          'MsgBox Sql
-          oConn.Execute Sql
+          sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
+'          MsgBox sql
+          oConn.Execute sql
           tableLine = tableLine + 1
 
       Wend
