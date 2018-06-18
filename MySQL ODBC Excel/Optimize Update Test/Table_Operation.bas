@@ -106,7 +106,7 @@ End Function
 
 Function ArrayLineDim(line As Integer, iDim As Integer) As String()
   'Create an array from a line in a worksheet'
-  Dim iArray As Integer, sArray() As String
+  Dim iColumn As Integer, sArray() As String
 
   'Dimentionate the array
   ReDim sArray(iDim + 1)
@@ -116,7 +116,7 @@ Function ArrayLineDim(line As Integer, iDim As Integer) As String()
       sArray(iColumn) = Cells(line, iColumn)
     Next
     
-  ArrayLine = sArray
+  ArrayLineDim = sArray
 End Function
 
 

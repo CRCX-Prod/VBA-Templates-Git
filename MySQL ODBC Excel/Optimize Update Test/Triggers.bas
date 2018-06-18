@@ -17,6 +17,12 @@ Sub usertest()
   MsgBox Environ("username")
 End Sub
 
+Sub OpenLogin()
+
+    LoginForm.Show
+
+End Sub
+
 'Form Request; need to be generalized'
 
 Sub SaveColoRequest()
@@ -65,32 +71,3 @@ Sub SaveColoRequest()
     End If
 
 End Sub
-
-Sub OpenLoginForm()
-    
-    If TestVersion = True Then
-        LoginForm.Show
-    End If
-    
-End Sub
-
-Function TestVersion() As Boolean
-    Dim rs As ADODB.Recordset
-    Set rs = New ADODB.Recordset
-    
-    TestVersion = True
-    
-    ConnectProductionServer
-    rs.Open "SELECT Version FROM client_version", oConn
-        
-    rs.MoveFirst
-    If Range("Version").Value < rs.Fields("Version") Then
-        MsgBox "Version too old, please open a version more recent than v" & rs.Fields("Version")
-        TestVersion = False
-    End If
-    
-    oConn.Close
-    Set oConn = Nothing
-    Set rs = Nothing
-    
-End Function

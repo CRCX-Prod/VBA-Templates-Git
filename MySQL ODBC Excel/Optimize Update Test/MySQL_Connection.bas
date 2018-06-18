@@ -33,7 +33,7 @@ End Sub
 Sub AppendData()
 
   Dim rs As ADODB.Recordset
-  Dim field(), sql, SqlFields As String
+  Dim field(), Sql, SqlFields As String
   Dim i As Integer
 
   Set rs = New ADODB.Recordset
@@ -50,9 +50,9 @@ Sub AppendData()
       i = i + 1
   Wend
 
-  sql = "INSERT INTO " & Cells(1, 2) & " SET " & SqlFields
+  Sql = "INSERT INTO " & Cells(1, 2) & " SET " & SqlFields
   'MsgBox Sql
-  oConn.Execute sql
+  oConn.Execute Sql
 
   oConn.Close
   Set oConn = Nothing

@@ -10,16 +10,14 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Sub Workbook_Open()
-    
     HideAllSheets
     isAdmin = False
-    RefreshReport
-        
+    LoginForm.Show
+
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
     
-    HideAllSheets
     If isAdmin = False Then
         Application.ThisWorkbook.Saved = True 'Informe Excel que le fichier a déjà été enregistré (cela évite d'avoir une demande d'enregistrement à la fermeture)
     End If
@@ -27,10 +25,8 @@ Private Sub Workbook_BeforeClose(Cancel As Boolean)
 End Sub
 
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
-    
-    
+
     If isAdmin = False Then
-        HideAllSheets
         Cancel = True 'Annule les demandes d'enregistrement
 
         MsgBox "Only saving the excel file won't record the data in the database." & Chr(10) _
@@ -39,14 +35,5 @@ Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
 
 End Sub
 
-Sub RefreshReport()
-    
-    Application.ScreenUpdating = False
-    Worksheets("Review List").Visible = xlSheetVisible
-    Worksheets("Review List").Activate
-    ImportData 16, 1
-    ThisWorkbook.RefreshAll
-    Worksheets("Main").Activate
-    Application.ScreenUpdating = True
 
-End Sub
+

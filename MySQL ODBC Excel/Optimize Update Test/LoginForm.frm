@@ -13,6 +13,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Private Sub cmbLogin_Change()
+
+End Sub
+
 Private Sub cmdOK_Click()
     
     TestPassword cmbLogin.Value, txtPassword.Value
@@ -25,10 +29,11 @@ Private Sub UserForm_Initialize()
        
 End Sub
 
+
 Private Sub cmbLoginAdditem()
     Dim rs As ADODB.Recordset
     Set rs = New ADODB.Recordset
-    
+
     ConnectProductionServer
     rs.Open "SELECT Login FROM 06preva_admin ORDER BY Login", oConn
     
