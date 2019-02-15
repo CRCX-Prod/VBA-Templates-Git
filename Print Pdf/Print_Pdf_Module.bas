@@ -11,22 +11,17 @@ Sub PrintPdf(sFileName As String, sPathFolder As String)
     If fileTest.fileExists(sPathFolder & sFileName & ".pdf") = True Then
     
         sMessage = sFileName & ".pdf" & Chr(10) & Chr(10) & "Already exists in the folder :" & Chr(10) & Chr(10) & sPathFolder & Chr(10) & Chr(10) & "Please delete the file before generating a new one."
-        MsgBox sMessage
+        'MsgBox sMessage
 
     Else
       
-        Application.ScreenUpdating = False
+        ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, _
+            Filename:=sPathFolder & sFileName & ".pdf", _
+            Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas _
+            :=False, OpenAfterPublish:=False
 
-
-                ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, _
-                Filename:=sPathFolder & sFileName & ".pdf", _
-                Quality:=xlQualityStandard, IncludeDocProperties:=True, IgnorePrintAreas _
-                :=False, OpenAfterPublish:=False
-
-                sMessage = sFileName & ".pdf" & Chr(10) & Chr(10) & "is saved in the folder :" & Chr(10) & Chr(10) & sPathFolder
-                MsgBox sMessage
-
-        Application.ScreenUpdating = True
+        sMessage = sFileName & ".pdf" & Chr(10) & Chr(10) & "is saved in the folder :" & Chr(10) & Chr(10) & sPathFolder
+        'MsgBox sMessage
     
     End If
 
@@ -51,17 +46,52 @@ End Function
 
 Sub SaveNoticeAsPDF()
 
-    Dim sRootFolder As String, sPathFolder As String, sFileName As String, sColoID As String
+    Dim idMin As Integer, idMax As Integer
     
-    
-    sRootFolder = FolderPathFromFile("Process & Database")
-    sPathFolder = sRootFolder & "Documentation\Handover Notice\Not Signed\"
-    
-    sColoID = Range("ColoID").Value
-    sFileName = "CAR" & sColoID & " Handover Notice"
+    Application.ScreenUpdating = False
 
-    PrintPdf sFileName, sPathFolder
+    idMin = Range("idMin").Value
+'    idMin = 2
+    idMax = Range("idMax").Value
+'    idMax = 10
+    
+    RunID idMin, idMax
+    
+    Application.ScreenUpdating = True
     
 End Sub
 
+Sub RunID(idMin As Integer, idMax As Integer)
+    
+    Dim sRootFolder As String, sPathFolder As String, sFileName As String
+    Dim sColoID As String, lenColoID As Integer, iLen As Integer
 
+    Dim iID As Integer
+
+    For iID = idMin To idMax
+
+        Range("ColoID") = iID
+
+        If Range("toGenerate") = "Generate PDF" Then
+
+            sRootFolder = FolderPathFromFile("Process & Database")
+            sPathFolder = sRootFolder & "Documentation\Handover Notice\Not Signed\"
+    
+            sColoID = Range("ColoID").Value
+            lenColoID = Len(sColoID)
+
+            For iLen = lenColoID To 3
+
+                sColoID = "0" & sColoID
+                
+            Next
+
+            sFileName = "CAR" & sColoID & " Handover Notice"
+
+            PrintPdf sFileName, sPathFolder
+
+        End If
+
+    Next
+
+End Sub
