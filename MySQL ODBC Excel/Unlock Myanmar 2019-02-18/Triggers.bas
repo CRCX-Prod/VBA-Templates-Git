@@ -35,7 +35,7 @@ Sub SaveNewData()
   Dim incrTestValue As Integer
   Dim incrDefaultValue As Integer, strMsgError As String
 
-    If MsgBox("Do you want to add New Contact  ?", vbYesNo, "New Contact") = 6 Then
+    If MsgBox("Do you want to add New Data  ?", vbYesNo, "New Data") = 6 Then
         TestMandatory
 
         Application.ScreenUpdating = False
