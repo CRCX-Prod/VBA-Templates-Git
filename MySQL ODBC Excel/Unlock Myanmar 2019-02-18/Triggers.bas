@@ -30,12 +30,12 @@ End Sub
 
 'Form Request; need to be generalized'
 
-Sub SaveColoRequest()
+Sub SaveNewContact()
 
   Dim incrTestValue As Integer
   Dim incrDefaultValue As Integer, strMsgError As String
 
-    If MsgBox("Do you want to record this Colocation Request ?", vbYesNo, "New Colocation Request") = 6 Then
+    If MsgBox("Do you want to add New Contact  ?", vbYesNo, "New Contact") = 6 Then
         TestMandatory
 
         Application.ScreenUpdating = False
