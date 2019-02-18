@@ -53,7 +53,7 @@ Sub AppendData()
       i = i + 1
   Wend
 
-  sql = "INSERT INTO " & Cells(1, 2) & " SET " & SqlFields
+  sql = "INSERT INTO " & Cells(11, 2) & " SET " & SqlFields
   'MsgBox Sql
   oConn.Execute sql
 
