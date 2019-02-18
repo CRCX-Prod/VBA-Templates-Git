@@ -10,7 +10,7 @@ Sub UpdatePrevalidation()
   isTimeOut = TimeOut(10)
   
   If isTimeOut = True Then
-    UpdateData 16, 1
+    UpdateData 16, 1 'Can change the position of the table here
     MsgBox "Data recorded in Database."
   Else
     MsgBox "Data has timed out. Last refresh was more than 10 minutes ago. Please Refresh the data before saving."

@@ -25,6 +25,56 @@ Sub ImportData(firstLine As Integer, firstColumn As Integer)
   Application.ScreenUpdating = True
 End Sub
 
+Sub UpdateData(firstLine As Integer, firstColumn As Integer)
+
+  Dim sql As String, SqlFields As String, tableName As String, countSql As Integer
+  Dim maxField As Integer
+  Dim tableLine As Integer
+
+  ConnectProductionServer
+
+      tableName = Cells(1, 2)
+      maxField = 1
+      tableLine = firstLine
+
+      While Cells(tableLine, firstColumn) <> ""
+
+          Cells(5, 1) = Cells(tableLine, firstColumn)
+
+          maxField = 2
+          countSql = 1
+          SqlFields = ""
+          While Cells(3, maxField) <> ""
+
+                      If countSql > 1 Then
+
+                          SqlFields = SqlFields & " , "
+                      End If
+
+                      If Cells(5, maxField) <> "" Then
+
+                          SqlFields = SqlFields & Cells(3, maxField) & " = '" & Cells(5, maxField) & "'"
+                          Else
+                          SqlFields = SqlFields & Cells(3, maxField) & " = NULL"
+                      End If
+
+              maxField = maxField + 1
+              countSql = countSql + 1
+          Wend
+          'Timestamp ????
+
+          sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
+          'MsgBox sql
+          oConn.Execute sql
+          tableLine = tableLine + 1
+
+      Wend
+  'MsgBox Sql
+      oConn.Close
+      Set oConn = Nothing
+
+End Sub
+
 Sub EmptyTable(firstLine As Integer, firstColumn As Integer)
   'Empty Excel table before doing new SELECT query'
 
@@ -119,7 +169,6 @@ Function ArrayLineDim(line As Integer, iDim As Integer) As String()
   ArrayLine = sArray
 End Function
 
-
 Function SizeArray(vArray() As String) As Integer
   Dim arrayItem As Variant, iArray As Integer
 
@@ -159,61 +208,7 @@ Function SqlImportFilters(sArrayFields() As String, sArrayValues() As String) As
   SqlImportFilters = sFilters
 End Function
 
-Sub UpdateData(firstLine As Integer, firstColumn As Integer)
 
-  Dim sql As String, SqlFields As String, tableName As String, countSql As Integer
-  Dim maxField As Integer
-  Dim tableLine As Integer
-
-  '_____________________________________
-
-  'Creation de la requete SQL UPDATE
-  '_____________________________________
-
-
-  ConnectProductionServer
-
-      tableName = Cells(1, 2)
-      maxField = 1
-      tableLine = firstLine
-
-      While Cells(tableLine, firstColumn) <> ""
-
-          Cells(5, 1) = Cells(tableLine, firstColumn)
-
-          maxField = 2
-          countSql = 1
-          SqlFields = ""
-          While Cells(3, maxField) <> ""
-
-                      If countSql > 1 Then
-
-                          SqlFields = SqlFields & " , "
-                      End If
-
-                      If Cells(5, maxField) <> "" Then
-
-                          SqlFields = SqlFields & Cells(3, maxField) & " = '" & Cells(5, maxField) & "'"
-                          Else
-                          SqlFields = SqlFields & Cells(3, maxField) & " = NULL"
-                      End If
-
-              maxField = maxField + 1
-              countSql = countSql + 1
-          Wend
-          'Timestamp ????
-
-          sql = "UPDATE " & tableName & " SET " & SqlFields & " WHERE " & Cells(3, 1) & " = " & Cells(5, 1)
-'          MsgBox sql
-          oConn.Execute sql
-          tableLine = tableLine + 1
-
-      Wend
-  'MsgBox Sql
-      oConn.Close
-      Set oConn = Nothing
-
-End Sub
 
 Function GetHistoryLog()
 
