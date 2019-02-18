@@ -15,12 +15,12 @@ Sub TestMandatory()
     
     i = 1
     
-    While Cells(2, i) <> ""
+    While Cells(12, i) <> ""
         
-        If Cells(4, i) = "Mandatory" Then
+        If Cells(14, i) = "Mandatory" Then
             
-            If Cells(3, i) = "" Then
-                MsgBox "Miss mandatory information or Colo already exists"
+            If Cells(13, i) = "" Then
+                MsgBox "Miss mandatory information"
                 Exit Sub
             End If
         End If
@@ -44,11 +44,11 @@ Sub AppendData()
 
   ConnectProductionServer
 
-  While Cells(2, i) <> ""
+  While Cells(12, i) <> ""
       If i = 1 Then   'field 1
-          SqlFields = Cells(2, i) & "= '" & Cells(3, i) & "'"
+          SqlFields = Cells(12, i) & "= '" & Cells(13, i) & "'"
       Else            'other fields
-          SqlFields = SqlFields & "," & Cells(2, i) & "= '" & Cells(3, i) & "'"
+          SqlFields = SqlFields & "," & Cells(12, i) & "= '" & Cells(13, i) & "'"
       End If
       i = i + 1
   Wend
