@@ -12,7 +12,7 @@ Public oConn As ADODB.Connection
 Sub ConnectProductionServer()
     'Enter here Connection informations'
     
-    ConnectDB "192.168.1.153", "01_unlmm", "unlmm", "unlmm"
+    ConnectDB "51.77.144.140", "unlmm_test", "unlmm-user", "CvRd.@eIuO57"
 End Sub
 
 Sub ConnectDB(server_name As String, database_name As String, user_id As String, password As String)
